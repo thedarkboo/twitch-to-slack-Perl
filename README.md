@@ -7,10 +7,11 @@ I originally had it posting attachments, and if you do that, you don't need Imag
 
 Dependencies:
 ---------------
-LWP::UserAgent;
-Data::Dumper;
-REST::Client;
-DateTime::Format::ISO8601;
-JSON::XS;
-Image::Resize;
-Image::Grab;
+LWP::UserAgent  
+Data::Dumper  
+REST::Client  
+DateTime::Format::ISO8601  
+JSON::XS  
+Image::Resize  
+Image::Grab  
+
