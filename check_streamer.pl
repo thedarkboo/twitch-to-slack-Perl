@@ -16,6 +16,7 @@ my $twitch_client_id  = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 my $filename          = 'twitch_live.txt';
 my $bot_name          = 'team-bot';
 my $slack_channel     = 'streaming';
+my $server_url        = 'http://domain.com';
 my $use_attachments   = '0'; # Please see comments in subroutine: started_streaming
 
 # Run main subroutine
@@ -270,7 +271,7 @@ sub gen_icon {
     print FH $new_thumb_image->png();
     close(FH);
 
-    return("http://the-boo.com/twitch/boticons/$new_image_name");
+    return("$server_url/boticons/$new_image_name");
   }
   
   return();   
