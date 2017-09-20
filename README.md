@@ -8,7 +8,7 @@ I originally had it posting attachments, and if you do that, you don't need Imag
 Make sure to create a directory called '/boticons' where the script lives. you may have to adjust the server url if you have it anywhere else other than the top html level. i happened to put this into a /twitch folder and used a .htaccess file to make sure no one could see a directory listing from the web.
 
 .htaccess  
-  Options -Indexes   
+   Options -Indexes   
 
 Dependencies:
 ---------------
