@@ -27,8 +27,7 @@ main();
 #=======================================
 sub main {
 
-  # List of streamers (all lowercase) 
-  #   - At some point, this could/should be in a config file
+  # Streamer containers
   # -------------------------------------------------
   my $streamer_hash = {};
   my $textfile_hash = {};
