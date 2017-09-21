@@ -2,19 +2,21 @@
 
 use strict;
 use LWP::UserAgent;
-use Data::Dumper;
 use REST::Client;
-use DateTime::Format::ISO8601;
 use JSON::XS;
+use YAML::XS 'LoadFile';
 
-# global variables
+# Load in config
 # -------------------------------------------------
-my $slack_bot_token   = 'xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; 
-my $twitch_client_id  = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';             
-my $filename          = 'twitch_live.txt';
-my $bot_name          = 'team-bot';
-my $slack_channel     = 'streaming';
-my $use_attachments   = '0'; # Please see comments in subroutine: started_streaming
+my $config = LoadFile('config.yml');
+
+my $slack_bot_token   = $config->{'slack_bot_token'};
+my $twitch_client_id  = $config->{'twitch_client_id'};
+my $filename          = $config->{'filename'};
+my $bot_name          = $config->{'bot_name'};
+my $slack_channel     = $config->{'slack_channel'};
+my $use_attachments   = $config->{'use_attachments'};
+my @streamers         = $config->{'streamers'};
 
 # Run main subroutine
 main();
@@ -28,7 +30,6 @@ sub main {
   # List of streamers (all lowercase) 
   #   - At some point, this could/should be in a config file
   # -------------------------------------------------
-  my @streamers = ('streamer1', 'streamer2', 'streamer3', 'streamer4');
   my $streamer_hash = {};
   my $textfile_hash = {};
 
@@ -186,7 +187,6 @@ sub stopped_streaming {
       text     => $name . ' has stopped streaming'
     }
   );
-  #print Dumper($res);
 }
 
 sub started_streaming {
@@ -235,5 +235,4 @@ sub started_streaming {
   # Now we'll post to slack
   my $ua = LWP::UserAgent->new();
   my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
-  #print Dumper($res);
 }
