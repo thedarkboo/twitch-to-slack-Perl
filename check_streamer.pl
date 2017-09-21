@@ -6,6 +6,12 @@ use REST::Client;
 use JSON::XS;
 use YAML::XS 'LoadFile';
 
+# ===============================================================================
+#  This script is a modification and reworking of the check_streamers.pl from:
+#  https://github.com/bopfer/TeamTool
+# ===============================================================================
+
+
 # Load in config
 # -------------------------------------------------
 my $config = LoadFile('/full/path/to/config.yml');
@@ -241,3 +247,4 @@ sub started_streaming {
   my $ua = LWP::UserAgent->new();
   my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
 }
+
