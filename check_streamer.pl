@@ -8,7 +8,7 @@ use YAML::XS 'LoadFile';
 
 # Load in config
 # -------------------------------------------------
-my $config = LoadFile('config.yml');
+my $config = LoadFile('/path/to/config.yml');
 
 my $slack_bot_token   = $config->{'slack_bot_token'};
 my $twitch_client_id  = $config->{'twitch_client_id'};
