@@ -13,3 +13,5 @@ JSON::XS
 YAML::XS 'LoadFile'  
 
 
+This script is a modification and reworking of the check_streamers.pl from:
+https://github.com/bopfer/TeamTool
