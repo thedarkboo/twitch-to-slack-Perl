@@ -1,0 +1,13 @@
+slack_bot_token:  'xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; 
+twitch_client_id: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';             
+filename:         'twitch_live.txt';
+bot_name:         'team-bot';
+slack_channel:    'streaming';
+use_attachments:  '0'; # Please see comments in subroutine: started_streaming
+
+# Lowercase twitch usernames
+streamers:
+  - 'streamer1'
+  - 'streamer2'
+  - 'streamer3'
+  - 'streamer4'
