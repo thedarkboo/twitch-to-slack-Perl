@@ -59,6 +59,12 @@ sub main {
 
   # Gather our list of saved active broadcasters from our local text file
   # -------------------------------------------------
+  unless(-e $filename){
+    open my $fh, '>>', $filename;
+    print $fh "\n";
+    close $fh;
+  }
+  
   open(my $fh, '<encoding(UTF-8)', $filename) or die "Failed to open file '$filename'";
   while(my $row = <$fh>){
     chomp $row;
