@@ -8,8 +8,8 @@ I originally had it posting attachments, but i felt it was just too big of a pos
 Dependencies:
 ---------------
 LWP::UserAgent  
-Data::Dumper  
 REST::Client  
-DateTime::Format::ISO8601  
 JSON::XS  
+YAML::XS 'LoadFile'  
+
 
