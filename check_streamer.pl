@@ -6,17 +6,14 @@ use Data::Dumper;
 use REST::Client;
 use DateTime::Format::ISO8601;
 use JSON::XS;
-use Image::Resize;
-use Image::Grab;
 
 # global variables
 # -------------------------------------------------
-my $slack_bot_token   = 'xoxb-xxxxxxxxxxxxxxxxxxxxxxxx'; 
-my $twitch_client_id  = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx';             
+my $slack_bot_token   = 'xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; 
+my $twitch_client_id  = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';             
 my $filename          = 'twitch_live.txt';
 my $bot_name          = 'team-bot';
 my $slack_channel     = 'streaming';
-my $server_url        = 'http://domain.com';
 my $use_attachments   = '0'; # Please see comments in subroutine: started_streaming
 
 # Run main subroutine
@@ -102,8 +99,10 @@ sub main {
         $textfile_hash->{$name}->{'stream_id'} = $stream_id;
 
         unless($use_attachments){
-          # need to create a 36x36 icon for the thumbnail
-          my ($thumb_url) = &gen_icon($individual_hash);
+          # need to create a 36x36 icon for the thumbnail  but twitch 
+          # only has these sizes : 600x600, 300x300, 150x150, 70x70, 50x50, 28x28
+          my $thumb_url = $individual_hash->{'logo'};
+          $thumb_url =~ s/300x300/50x50/;
 
           if($thumb_url){
             $individual_hash->{'thumb_url'} = $thumb_url;
@@ -237,42 +236,4 @@ sub started_streaming {
   my $ua = LWP::UserAgent->new();
   my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
   #print Dumper($res);
-}
-
-sub gen_icon {
-  my ($individual_hash) = shift;
-
-  my $name = $individual_hash->{'name'};
-
-  unless($individual_hash->{'logo'}){ return() }
-
-  # Find the extension of the image
-  my $logo_url = $individual_hash->{'logo'};
-  my ($extension) = $logo_url =~ /(\.[^.]+)$/;
-
-  my $pic = new Image::Grab;
-  $pic->url($individual_hash->{'logo'});
-  $pic->grab;
-
-  my $image_name = $name . $extension;
-
-  open(IMAGE, ">boticons/$image_name");
-  binmode IMAGE;  # for MSDOS derivations.
-  print IMAGE $pic->image;
-  close IMAGE;  
-
-  if(-e "boticons/$image_name"){
-    my $thumb_image = Image::Resize->new("boticons/$image_name");
-    my $new_thumb_image = $thumb_image->resize(36,36);
-
-    my $new_image_name = $name . '_36x36' . $extension;
-
-    open(FH, ">boticons/$new_image_name");
-    print FH $new_thumb_image->png();
-    close(FH);
-
-    return("$server_url/boticons/$new_image_name");
-  }
-  
-  return();   
 }
