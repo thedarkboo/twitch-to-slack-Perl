@@ -16,7 +16,7 @@ my $filename          = $config->{'filename'};
 my $bot_name          = $config->{'bot_name'};
 my $slack_channel     = $config->{'slack_channel'};
 my $use_attachments   = $config->{'use_attachments'};
-my @streamers         = $config->{'streamers'};
+my @streamers         = @{$config->{'streamers'}};
 
 # Run main subroutine
 main();
