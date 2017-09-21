@@ -3,7 +3,7 @@ Perl script sending slack a message when twitch channel(s) starts or stops strea
 
 I wanted a simple script that i could cron to poll twitch for streamers to post to our slack channel.
 
-I originally had it posting attachments, but i felt it was just too big of a post, and wanted something cleaner, so i left it in in case others might want it.
+I originally had it posting attachments, but i felt it was just too big of a post, and wanted something cleaner, so i left it in just in case others might want it.
 
 Dependencies:
 ---------------
