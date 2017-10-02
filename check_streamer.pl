@@ -241,6 +241,12 @@ sub started_streaming {
       $post_hash->{'as_user'}   = 'false';
       $post_hash->{ 'icon_url'} = $hash->{'thumb_url'};
     }
+    else{
+      # Default twitch profile image
+      my $thumb_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_50x50.png';
+      $post_hash->{'as_user'}   = 'false';
+      $post_hash->{ 'icon_url'} = $thumb_url;
+    }
   }
 
   # Now we'll post to slack
