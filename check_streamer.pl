@@ -264,12 +264,14 @@ sub multitwitch {
   my ($streamer_hash) = shift;
 
 
-  my $url = 'http://multitwitch.tv';
-
+  my $url    = 'http://multitwitch.tv';
+  my $active = 0;
+  
   foreach my $name (sort keys %$streamer_hash){
     my $stream_id = $streamer_hash->{$name}->{'stream_id'};
     if($stream_id > 0){
       $url .= '/' . $name;
+      $active++;
     }
   }
 
@@ -282,7 +284,10 @@ sub multitwitch {
       attachments   => [{}]
   };
 
-  # Now we'll post to slack
-  my $ua = LWP::UserAgent->new();
-  my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
+  # We'll only advertise if there's more than 3 players
+  if($active >= 3){
+    # Now we'll post to slack
+    my $ua = LWP::UserAgent->new();
+    my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
+  }
 }
