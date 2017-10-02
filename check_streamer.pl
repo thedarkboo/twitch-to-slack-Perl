@@ -6,23 +6,19 @@ use REST::Client;
 use JSON::XS;
 use YAML::XS 'LoadFile';
 
-# ===============================================================================
-#  This script is a modification and reworking of the check_streamers.pl from:
-#  https://github.com/bopfer/TeamTool
-# ===============================================================================
-
-
 # Load in config
 # -------------------------------------------------
-my $config = LoadFile('/full/path/to/config.yml');
+my $config = LoadFile('/www/the-boo/html/twitch/config.yml');
 
-my $slack_bot_token   = $config->{'slack_bot_token'};
-my $twitch_client_id  = $config->{'twitch_client_id'};
-my $filename          = $config->{'filename'};
-my $bot_name          = $config->{'bot_name'};
-my $slack_channel     = $config->{'slack_channel'};
-my $use_attachments   = $config->{'use_attachments'};
-my @streamers         = @{$config->{'streamers'}};
+my $slack_bot_token     = $config->{'slack_bot_token'};
+my $twitch_client_id    = $config->{'twitch_client_id'};
+my $filename            = $config->{'filename'};
+my $bot_name            = $config->{'bot_name'};
+my $slack_channel       = $config->{'slack_channel'};
+my $use_attachments     = $config->{'use_attachments'};
+my @streamers           = @{$config->{'streamers'}};
+my $use_multitwitch     = $config->{'use_multitwitch'};
+my $multitwitch_toggle  = 0;
 
 # Run main subroutine
 main();
@@ -65,12 +61,12 @@ sub main {
 
   # Gather our list of saved active broadcasters from our local text file
   # -------------------------------------------------
-  unless(-e $filename){
+  unless(-e $filename){ 
     open my $fh, '>>', $filename;
     print $fh "\n";
     close $fh;
   }
-  
+
   open(my $fh, '<encoding(UTF-8)', $filename) or die "Failed to open file '$filename'";
   while(my $row = <$fh>){
     chomp $row;
@@ -123,6 +119,9 @@ sub main {
 
         # Now send off a notification to slack
         &started_streaming($individual_hash);
+
+        # Toggle the multi twitch advert
+        $multitwitch_toggle = 1;
       }
       else{
         # Do Nothing - Again we do nothing, because they are inactive. 
@@ -140,6 +139,13 @@ sub main {
     }
   }
   close $fh;
+
+
+  if($use_multitwitch == 1){
+    if($multitwitch_toggle == 1){
+      &multitwitch($streamer_hash);
+    }
+  }
 }
 
 
@@ -241,7 +247,7 @@ sub started_streaming {
       $post_hash->{'as_user'}   = 'false';
       $post_hash->{ 'icon_url'} = $hash->{'thumb_url'};
     }
-    else{
+    else{ 
       # Default twitch profile image
       my $thumb_url = 'https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_50x50.png';
       $post_hash->{'as_user'}   = 'false';
@@ -254,3 +260,29 @@ sub started_streaming {
   my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
 }
 
+sub multitwitch {
+  my ($streamer_hash) = shift;
+
+
+  my $url = 'http://multitwitch.tv';
+
+  foreach my $name (sort keys %$streamer_hash){
+    my $stream_id = $streamer_hash->{$name}->{'stream_id'};
+    if($stream_id > 0){
+      $url .= '/' . $name;
+    }
+  }
+
+  my $post_hash = {
+      token         => $slack_bot_token,
+      as_user       => 'true',
+      username      => $bot_name,
+      channel       => $slack_channel,
+      text          => "Support the clan and watch/sub all our streamers. \n" . $url,
+      attachments   => [{}]
+  };
+
+  # Now we'll post to slack
+  my $ua = LWP::UserAgent->new();
+  my $res = $ua->post( 'https://slack.com/api/chat.postMessage', $post_hash);
+}
